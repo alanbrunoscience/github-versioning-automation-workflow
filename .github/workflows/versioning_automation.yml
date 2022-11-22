@@ -1,0 +1,23 @@
+name: Versioning Automation with SemVer
+
+on:
+  workflow_call:
+
+jobs:
+  Workflow-versioning:
+    runs-on: ubuntu-latest
+
+    steps:
+     - name: Workflow version
+       id: versioning
+       uses: alanbrunoscience/github-semantic-versioning-actions@v1.0.0
+
+     - name: Create Release
+       if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+       id: version
+       uses: "marvinpinto/action-automatic-releases@latest"
+       with:
+         repo_token: "${{ secrets.GITHUB_TOKEN }}"
+         title: ${{ steps.versioning.outputs.version }}
+         automatic_release_tag: ${{ steps.versioning.outputs.version }}
+         prerelease: false
